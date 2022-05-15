@@ -1,0 +1,46 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto enp1s0
+iface enp1s0 inet static
+  address 192.168.122.101
+  netmask 255.255.255.0
+  gateway 192.168.122.1
+
+# brAB
+auto enp7s0
+iface enp7s0 inet static
+  address 200.200.200.1
+  netmask 255.255.255.252
+  #Router C
+  post-up ip r replace 200.200.201.0/30 via 200.200.200.2
+  pre-down ip r delete 200.200.201.0/30 via 200.200.200.2 || true 
+
+  #Router E
+  post-up ip r replace 200.200.202.0/30 via 200.200.200.2
+  pre-down ip r delete 200.200.202.0/30 via 200.200.200.2 || true 
+  
+  #Router D
+  post-up ip r replace 200.200.204.0/30 via 200.200.200.2
+  pre-down ip r delete 200.200.204.0/30 via 200.200.200.2 || true 
+  
+  #Red E
+  post-up ip r replace 10.10.54.0/29 via 200.200.200.2
+  pre-down ip r delete 10.10.54.0/29 via 200.200.200.2 || true 
+  
+  #Red B
+  post-up ip r replace 10.10.52.0/28 via 200.200.200.2
+  pre-down ip r delete 10.10.52.0/28 via 200.200.200.2 || true 
+
+# brA
+auto enp8s0
+iface enp8s0 inet static
+  address 10.10.51.1
+  netmask 255.255.255.224
